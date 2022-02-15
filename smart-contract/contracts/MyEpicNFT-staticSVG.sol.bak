@@ -1,0 +1,87 @@
+// SPDX-License-Identifier: MIT
+
+// Working contract that generates a "static" SVG (eg: text in the SVG is hardcoded)
+
+pragma solidity ^0.8.0;
+
+// We first import some OpenZeppelin Contracts.
+import "@openzeppelin/contracts/token/ERC721/extensions/ERC721URIStorage.sol";
+import "@openzeppelin/contracts/utils/Counters.sol";
+import "hardhat/console.sol";
+
+// We inherit the contract we imported. This means we'll have access
+// to the inherited contract's methods.
+contract MyEpicNFT is ERC721URIStorage {
+  // Magic given to us by OpenZeppelin to help us keep track of tokenIds.
+  using Counters for Counters.Counter;
+  Counters.Counter private _tokenIds;
+
+  // We need to pass the name of our NFTs token and its symbol.
+  constructor() ERC721 ("SquareNFT", "SQUARE") {
+    console.log("This is my NFT contract. Woah!");
+  }
+
+  // A function our user will hit to get their NFT.
+  function makeAnEpicNFT() public {
+     // Get the current tokenId, this starts at 0.
+    uint256 newItemId = _tokenIds.current();
+
+     // Actually mint the NFT to the sender using msg.sender.
+    _safeMint(msg.sender, newItemId);
+
+    // Set the NFTs data.
+    // _setTokenURI(newItemId, "https://jsonkeeper.com/b/77NJ");
+
+    // LordBenitoPepito SVG:
+    // https://www.svgviewer.dev/
+    // <svg xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMinYMin meet" viewBox="0 0 350 350">
+    //   <style>
+    //     .base { fill: white; font-family: serif; font-size: 14px; }
+    //   </style>
+    //   <rect width="100%" height="100%" fill="black"/>
+    //   <text x="50%" y="50%" class="base" dominant-baseline="middle" text-anchor="middle">LordBenitoPepito</text>
+    // </svg>
+
+    // base64 envoded:
+    // https://www.utilities-online.info/base64
+    // PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHByZXNlcnZlQXNwZWN0UmF0aW89InhNaW5ZTWluIG1lZXQiIHZpZXdCb3g9IjAgMCAzNTAgMzUwIj4KICA8c3R5bGU+CiAgICAuYmFzZSB7IGZpbGw6IHdoaXRlOyBmb250LWZhbWlseTogc2VyaWY7IGZvbnQtc2l6ZTogMTRweDsgfQogIDwvc3R5bGU+CiAgPHJlY3Qgd2lkdGg9IjEwMCUiIGhlaWdodD0iMTAwJSIgZmlsbD0iYmxhY2siLz4KICA8dGV4dCB4PSI1MCUiIHk9IjUwJSIgY2xhc3M9ImJhc2UiIGRvbWluYW50LWJhc2VsaW5lPSJtaWRkbGUiIHRleHQtYW5jaG9yPSJtaWRkbGUiPkxvcmRCZW5pdG9QZXBpdG88L3RleHQ+Cjwvc3ZnPg==
+    
+    // Use it in a data url
+    // data:image/svg+xml;base64,INSERT_YOUR_BASE64_ENCODED_SVG_HERE
+    // data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHByZXNlcnZlQXNwZWN0UmF0aW89InhNaW5ZTWluIG1lZXQiIHZpZXdCb3g9IjAgMCAzNTAgMzUwIj4KICA8c3R5bGU+CiAgICAuYmFzZSB7IGZpbGw6IHdoaXRlOyBmb250LWZhbWlseTogc2VyaWY7IGZvbnQtc2l6ZTogMTRweDsgfQogIDwvc3R5bGU+CiAgPHJlY3Qgd2lkdGg9IjEwMCUiIGhlaWdodD0iMTAwJSIgZmlsbD0iYmxhY2siLz4KICA8dGV4dCB4PSI1MCUiIHk9IjUwJSIgY2xhc3M9ImJhc2UiIGRvbWluYW50LWJhc2VsaW5lPSJtaWRkbGUiIHRleHQtYW5jaG9yPSJtaWRkbGUiPkxvcmRCZW5pdG9QZXBpdG88L3RleHQ+Cjwvc3ZnPg==
+
+    // Build the JSON
+    // {
+    // "name": "LordBenitoPepito",
+    // "description": "An NFT from the highly acclaimed square collection",
+    // "image": "data:image/svg+xml;base64,INSERT_YOUR_BASE64_ENCODED_SVG_HERE"
+    // }
+
+    // e.g.:
+    // {"name": "EpicLordHamburger","description": "An NFT from the highly acclaimed square collection","image": "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHByZXNlcnZlQXNwZWN0UmF0aW89InhNaW5ZTWluIG1lZXQiIHZpZXdCb3g9IjAgMCAzNTAgMzUwIj4KICA8c3R5bGU+CiAgICAuYmFzZSB7IGZpbGw6IHdoaXRlOyBmb250LWZhbWlseTogc2VyaWY7IGZvbnQtc2l6ZTogMTRweDsgfQogIDwvc3R5bGU+CiAgPHJlY3Qgd2lkdGg9IjEwMCUiIGhlaWdodD0iMTAwJSIgZmlsbD0iYmxhY2siLz4KICA8dGV4dCB4PSI1MCUiIHk9IjUwJSIgY2xhc3M9ImJhc2UiIGRvbWluYW50LWJhc2VsaW5lPSJtaWRkbGUiIHRleHQtYW5jaG9yPSJtaWRkbGUiPkxvcmRCZW5pdG9QZXBpdG88L3RleHQ+Cjwvc3ZnPg=="}
+
+    // Encode to Base64 the whole JSON:
+    // eyJuYW1lIjogIkVwaWNMb3JkSGFtYnVyZ2VyIiwiZGVzY3JpcHRpb24iOiAiQW4gTkZUIGZyb20gdGhlIGhpZ2hseSBhY2NsYWltZWQgc3F1YXJlIGNvbGxlY3Rpb24iLCJpbWFnZSI6ICJkYXRhOmltYWdlL3N2Zyt4bWw7YmFzZTY0LFBITjJaeUI0Yld4dWN6MGlhSFIwY0RvdkwzZDNkeTUzTXk1dmNtY3ZNakF3TUM5emRtY2lJSEJ5WlhObGNuWmxRWE53WldOMFVtRjBhVzg5SW5oTmFXNVpUV2x1SUcxbFpYUWlJSFpwWlhkQ2IzZzlJakFnTUNBek5UQWdNelV3SWo0S0lDQThjM1I1YkdVK0NpQWdJQ0F1WW1GelpTQjdJR1pwYkd3NklIZG9hWFJsT3lCbWIyNTBMV1poYldsc2VUb2djMlZ5YVdZN0lHWnZiblF0YzJsNlpUb2dNVFJ3ZURzZ2ZRb2dJRHd2YzNSNWJHVStDaUFnUEhKbFkzUWdkMmxrZEdnOUlqRXdNQ1VpSUdobGFXZG9kRDBpTVRBd0pTSWdabWxzYkQwaVlteGhZMnNpTHo0S0lDQThkR1Y0ZENCNFBTSTFNQ1VpSUhrOUlqVXdKU0lnWTJ4aGMzTTlJbUpoYzJVaUlHUnZiV2x1WVc1MExXSmhjMlZzYVc1bFBTSnRhV1JrYkdVaUlIUmxlSFF0WVc1amFHOXlQU0p0YVdSa2JHVWlQa3h2Y21SQ1pXNXBkRzlRWlhCcGRHODhMM1JsZUhRK0Nqd3ZjM1puUGc9PSJ9
+
+
+    // Use it in a data url
+    // "data:application/json;base64,INSERT_THE_BASE64_ENCODED_JSON_HERE"
+
+    // Paste the whole thing here for testing it:
+    // https://nftpreview.0xdev.codes/
+
+    _setTokenURI(newItemId, "data:application/json;base64,eyJuYW1lIjogIkVwaWNMb3JkSGFtYnVyZ2VyIiwiZGVzY3JpcHRpb24iOiAiQW4gTkZUIGZyb20gdGhlIGhpZ2hseSBhY2NsYWltZWQgc3F1YXJlIGNvbGxlY3Rpb24iLCJpbWFnZSI6ICJkYXRhOmltYWdlL3N2Zyt4bWw7YmFzZTY0LFBITjJaeUI0Yld4dWN6MGlhSFIwY0RvdkwzZDNkeTUzTXk1dmNtY3ZNakF3TUM5emRtY2lJSEJ5WlhObGNuWmxRWE53WldOMFVtRjBhVzg5SW5oTmFXNVpUV2x1SUcxbFpYUWlJSFpwWlhkQ2IzZzlJakFnTUNBek5UQWdNelV3SWo0S0lDQThjM1I1YkdVK0NpQWdJQ0F1WW1GelpTQjdJR1pwYkd3NklIZG9hWFJsT3lCbWIyNTBMV1poYldsc2VUb2djMlZ5YVdZN0lHWnZiblF0YzJsNlpUb2dNVFJ3ZURzZ2ZRb2dJRHd2YzNSNWJHVStDaUFnUEhKbFkzUWdkMmxrZEdnOUlqRXdNQ1VpSUdobGFXZG9kRDBpTVRBd0pTSWdabWxzYkQwaVlteGhZMnNpTHo0S0lDQThkR1Y0ZENCNFBTSTFNQ1VpSUhrOUlqVXdKU0lnWTJ4aGMzTTlJbUpoYzJVaUlHUnZiV2x1WVc1MExXSmhjMlZzYVc1bFBTSnRhV1JrYkdVaUlIUmxlSFF0WVc1amFHOXlQU0p0YVdSa2JHVWlQa3h2Y21SQ1pXNXBkRzlRWlhCcGRHODhMM1JsZUhRK0Nqd3ZjM1puUGc9PSJ9");
+    console.log("An NFT w/ ID %s has been minted to %s", newItemId, msg.sender);
+
+    // Check if the token appears on OpenSea testnet:
+    // https://testnets.opensea.io/
+    // Search for the contract hash
+
+    // If nothing shows on opensea testnet, validate the asset here:
+    // https://rinkeby-api.opensea.io/asset/<contract-number>/<asset-id>/validate/
+    // e.g.: https://rinkeby-api.opensea.io/asset/0x1f9ed5943B17bA6B7e7f41D8b67382A98e999920/0/validate/
+
+    // Increment the counter for when the next NFT is minted.
+    _tokenIds.increment();
+  }
+}
