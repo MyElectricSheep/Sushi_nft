@@ -1,15 +1,7 @@
-# Basic Sample Hardhat Project
+# How to to run the smart contract
 
-This project demonstrates a basic Hardhat use case. It comes with a sample contract, a test for that contract, a sample script that deploys that contract, and an example of a task implementation, which simply lists the available accounts.
+`npx hardhat run scripts/run.js`
 
-Try running some of the following tasks:
+# How to to deploy the smart contract on Rinkeby
 
-```shell
-npx hardhat accounts
-npx hardhat compile
-npx hardhat clean
-npx hardhat test
-npx hardhat node
-node scripts/sample-script.js
-npx hardhat help
-```
+`npx hardhat run scripts/deploy.js --network rinkeby`
