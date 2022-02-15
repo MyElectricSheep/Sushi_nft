@@ -28,6 +28,8 @@ contract sushiNFT is ERC721URIStorage {
     // https://delishably.com/meat-dishes/The-Different-Kinds-of-Sushi
   string[] thirdWords = ["Maki_Sushi", "Gunkan_Maki", "Temaki", "Nare_Sushi", "Nigiri", "Oshi_Sushi", "Sasa_Sushi", "Kakinoha_Sushi", "Temari", "Chirashi_Sushi", "Inari_Sushi"];
 
+  event NewSushiNFTMinted(address sender, uint256 tokenId);
+
   // We need to pass the name of our NFTs token and its symbol.
   constructor() ERC721 ("sushiNFT", "SUSHI") {
     console.log("This is my NFT contract. Woah!");
@@ -105,5 +107,8 @@ contract sushiNFT is ERC721URIStorage {
   
     _tokenIds.increment();
     console.log("An NFT w/ ID %s has been minted to %s", newItemId, msg.sender);
+
+    // Send an event that we can capture in the client
+    emit NewSushiNFTMinted(msg.sender, newItemId);
   }
 }
