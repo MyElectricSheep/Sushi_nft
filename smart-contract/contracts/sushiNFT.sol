@@ -12,7 +12,7 @@ import { Base64 } from "./libraries/Base64.sol";
 
 // We inherit the contract we imported. This means we'll have access
 // to the inherited contract's methods.
-contract MyEpicNFT is ERC721URIStorage {
+contract sushiNFT is ERC721URIStorage {
   // Magic given to us by OpenZeppelin to help us keep track of tokenIds.
   using Counters for Counters.Counter;
   Counters.Counter private _tokenIds;
@@ -29,7 +29,7 @@ contract MyEpicNFT is ERC721URIStorage {
   string[] thirdWords = ["Maki_Sushi", "Gunkan_Maki", "Temaki", "Nare_Sushi", "Nigiri", "Oshi_Sushi", "Sasa_Sushi", "Kakinoha_Sushi", "Temari", "Chirashi_Sushi", "Inari_Sushi"];
 
   // We need to pass the name of our NFTs token and its symbol.
-  constructor() ERC721 ("SquareNFT", "SQUARE") {
+  constructor() ERC721 ("sushiNFT", "SUSHI") {
     console.log("This is my NFT contract. Woah!");
   }
 

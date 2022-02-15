@@ -1,9 +1,11 @@
 {
-  "name": "epic-nfts",
+  "name": "sushi-nfts",
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
   "scripts": {
+    "start": "npx hardhat run scripts/run.js",
+    "deploy": "npx hardhat run scripts/deploy.js --network rinkeby",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [],
