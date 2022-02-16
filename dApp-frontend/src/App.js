@@ -3,16 +3,42 @@ import GithubLogo from "./assets/GitHub-Mark-64px.png";
 import React, { useEffect, useState, useRef } from "react";
 import { ethers } from "ethers";
 import sushiNFT from "./utils/sushiNFT.json";
+import SushiLoad from "./SushiLoad";
 
 // Constants
 const GITHUB_HANDLE = "MyElectricSheep";
 const GITHUB_LINK = `https://github.com/${GITHUB_HANDLE}`;
 const OPENSEA_LINK = "";
 const TOTAL_MINT_COUNT = 50;
+const CONTRACT_ADDRESS =
+  process.env.REACT_APP_DEPLOYED_RINKEBY_CONTRACT_ADDRESS;
 
 const App = () => {
   const [currentAccount, setCurrentAccount] = useState("");
+  const [loading, setLoading] = useState(false);
+
   const eth = useRef();
+
+  const checkIfNetworkIsRinkeby = async () => {
+    try {
+      const chainId = await eth.current.request({ method: "eth_chainId" });
+      console.log("Connected to chain " + chainId);
+
+      // String, hex code of the chainId of the Rinkebey test network
+      const rinkebyChainId = "0x4";
+      // id of other networks besides Rinkeby
+      // https://docs.metamask.io/guide/ethereum-provider.html#table-of-contents
+      // https://chainlist.org/
+
+      if (chainId !== rinkebyChainId) {
+        alert(
+          "Hello there! sushiNFT is a work in progress.\n\nAt the moment, we only support the Rinkeby Test Network.\n\nHence, your wallet must be connected to the Rinkeby Test Network to mint your sushiNFTs :)"
+        );
+      }
+    } catch (e) {
+      console.log(e);
+    }
+  };
 
   // Make sure we can access Window.ethereum object
   const checkIfWalletIsConnected = async () => {
@@ -24,6 +50,7 @@ const App = () => {
     } else {
       console.log("We have the ethereum object", ethereum);
       eth.current = ethereum;
+      checkIfNetworkIsRinkeby();
     }
 
     /*
@@ -43,6 +70,10 @@ const App = () => {
       console.log("Found authorized account:", account);
       // account will be a wallet address of type 0x
       setCurrentAccount(account);
+
+      // Setup listener! This is for the case where a user comes to the site
+      // and ALREADY have their wallet connected + authorized.
+      setupEventListener();
     } else {
       console.log("No authorized account found");
     }
@@ -70,15 +101,39 @@ const App = () => {
        */
       console.log("Connected!", account);
       setCurrentAccount(account);
+
+      // Setup listener! This is for the case where a user comes to the site
+      // and connects their wallet for the first time.
+      setupEventListener();
+    } catch (e) {
+      console.log(e);
+    }
+  };
+
+  const setupEventListener = async () => {
+    console.log("setting up event listener");
+    try {
+      if (eth.current) {
+        const provider = new ethers.providers.Web3Provider(eth.current);
+        const signer = provider.getSigner();
+        const connectedContract = new ethers.Contract(
+          CONTRACT_ADDRESS,
+          sushiNFT.abi,
+          signer
+        );
+        connectedContract.on("NewSushiNFTMinted", (from, tokenId) => {
+          console.log(from, tokenId.toNumber());
+          alert(
+            `Hey there! We've minted your NFT and sent it to your wallet. It may be blank right now. It can take a max of 10 min to show up on OpenSea. Here's the link: https://testnets.opensea.io/assets/${CONTRACT_ADDRESS}/${tokenId.toNumber()}`
+          );
+        });
+      }
     } catch (e) {
       console.log(e);
     }
   };
 
   const askContractToMintNFT = async () => {
-    const CONTRACT_ADDRESS =
-      process.env.REACT_APP_DEPLOYED_RINKEBY_CONTRACT_ADDRESS;
-
     try {
       if (eth.current) {
         /*
@@ -107,6 +162,7 @@ const App = () => {
 
         console.log("Ask wallet to pay gas");
         let nftTxn = await connectedContract.makeAnEpicNFT();
+        setLoading(true);
 
         console.log("Mining... please wait");
         await nftTxn.wait();
@@ -114,8 +170,10 @@ const App = () => {
         console.log(
           `Mined, see transaction here: https://rinkeby.etherscan.io/tx/${nftTxn.hash}`
         );
+        setLoading(false);
       }
     } catch (e) {
+      setLoading(false);
       console.log(e);
     }
   };
@@ -134,27 +192,38 @@ const App = () => {
     </button>
   );
 
-  const renderConnectedContainer = () => (
-    <button
-      onClick={askContractToMintNFT}
-      className="cta-button connect-wallet-button"
-    >
-      Mint NFT
-    </button>
-  );
+  const renderConnectedContainer = () => {
+    const classes = `cta-button ${
+      loading ? "mint-button" : "connect-wallet-button"
+    }`;
+
+    return (
+      <button
+        onClick={askContractToMintNFT}
+        className={classes}
+        disabled={loading ? true : false}
+      >
+        {loading ? "Minting your NFT" : "Mint NFT"}
+      </button>
+    );
+  };
 
   return (
     <div className="App">
       <div className="container">
         <div className="header-container">
-          <p className="header gradient-text">My NFT Collection</p>
+          <p className="header gradient-text">sushiNFT Collection</p>
+
           <p className="sub-text">
-            Each unique. Each beautiful. Discover your NFT today.
+            Each unique. Each delicious. Discover your own sushiNFT today.
           </p>
+
+          {/* <p className="sub-text">🌊 View Collection on OpenSea</p> */}
           {currentAccount
             ? renderConnectedContainer()
             : renderNotConnectedContainer()}
         </div>
+        {loading && <SushiLoad />}
         <div className="footer-container">
           <img alt="Github Logo" className="github-logo" src={GithubLogo} />
           <a

@@ -10,11 +10,16 @@
   background-color: #0d1116;
   display: flex;
   flex-direction: column;
+  align-items: center;
   justify-content: space-between;
 }
 
 .header-container {
-  padding-top: 30px;
+  /* padding-top: 30px; */
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
 }
 
 .header {
@@ -37,6 +42,7 @@
 
 .cta-button {
   height: 45px;
+  margin: 0 auto;
   border: 0;
   width: auto;
   padding-left: 40px;
@@ -58,7 +64,7 @@
   background: -webkit-linear-gradient(left, #a200d6, #ff6fdf);
   background-size: 200% 200%;
   animation: gradient-animation 4s ease infinite;
-  margin-right: 15px;
+  cursor: disabled;
 }
 
 .opensea-button {
@@ -72,6 +78,7 @@
 }
 
 .footer-container {
+  width: 100%;
   display: flex;
   justify-content: center;
   align-items: center;
