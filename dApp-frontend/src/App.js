@@ -4,6 +4,7 @@ import React, { useEffect, useState, useRef } from "react";
 import { ethers } from "ethers";
 import sushiNFT from "./utils/sushiNFT.json";
 import SushiLoad from "./SushiLoad";
+import GreatWave from "./GreatWave";
 
 // Constants
 const GITHUB_HANDLE = "MyElectricSheep";
@@ -210,33 +211,48 @@ const App = () => {
 
   return (
     <div className="App">
-      <div className="container">
-        <div className="header-container">
-          <p className="header gradient-text">sushiNFT Collection</p>
+      <a
+        class="github-fork-ribbon"
+        href="https://url.to-your.repo"
+        data-ribbon="OpenSea Collection"
+        title="OpenSea Collection"
+      >
+        OpenSea Collection
+      </a>
+      <GreatWave>
+        <div className="container">
+          <div className="header-container"></div>
+          <div className="body-container">
+            <p className="body gradient-text">
+              sushiNFT{" "}
+              <span role="img" aria-label="sushi" className="sushi-icon">
+                🍣
+              </span>
+            </p>
 
-          <p className="sub-text">
-            Each unique. Each delicious. Discover your own sushiNFT today.
-          </p>
-
-          {/* <p className="sub-text">🌊 View Collection on OpenSea</p> */}
-          {currentAccount
-            ? renderConnectedContainer()
-            : renderNotConnectedContainer()}
+            <p className="sub-text">
+              Each unique. <br /> Each delicious. <br /> Discover your own
+              sushiNFT today.
+            </p>
+            {currentAccount
+              ? renderConnectedContainer()
+              : renderNotConnectedContainer()}
+          </div>
+          {loading && <SushiLoad />}
+          <div className="footer-container">
+            <img alt="Github Logo" className="github-logo" src={GithubLogo} />
+            <a
+              className="footer-text"
+              href={GITHUB_LINK}
+              target="_blank"
+              rel="noreferrer"
+            >
+              built with⚡ by{" "}
+              <span className="electric-sheep">{GITHUB_HANDLE}</span>
+            </a>
+          </div>
         </div>
-        {loading && <SushiLoad />}
-        <div className="footer-container">
-          <img alt="Github Logo" className="github-logo" src={GithubLogo} />
-          <a
-            className="footer-text"
-            href={GITHUB_LINK}
-            target="_blank"
-            rel="noreferrer"
-          >
-            built with⚡ by{" "}
-            <span className="electric-sheep">{GITHUB_HANDLE}</span>
-          </a>
-        </div>
-      </div>
+      </GreatWave>
     </div>
   );
 };
