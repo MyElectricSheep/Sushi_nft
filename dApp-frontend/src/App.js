@@ -2,21 +2,31 @@ import "./styles/App.css";
 import GithubLogo from "./assets/GitHub-Mark-64px.png";
 import React, { useEffect, useState, useRef } from "react";
 import { ethers } from "ethers";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+
 import sushiNFT from "./utils/sushiNFT.json";
 import SushiLoad from "./SushiLoad";
 import GreatWave from "./GreatWave";
+import ReactTooltip from "react-tooltip";
 
 // Constants
 const GITHUB_HANDLE = "MyElectricSheep";
 const GITHUB_LINK = `https://github.com/${GITHUB_HANDLE}`;
-const OPENSEA_LINK = "";
-const TOTAL_MINT_COUNT = 50;
+const OPENSEA_LINK = process.env.REACT_APP_OPENSEA_LINK;
 const CONTRACT_ADDRESS =
   process.env.REACT_APP_DEPLOYED_RINKEBY_CONTRACT_ADDRESS;
+// String: hex code of the chainId of the Rinkeby test network
+const RINKEBY_CHAIN_ID = "0x4";
+// id of other networks besides Rinkeby
+// https://docs.metamask.io/guide/ethereum-provider.html#table-of-contents
+// https://chainlist.org/
 
 const App = () => {
   const [currentAccount, setCurrentAccount] = useState("");
+  const [howManyNFTs, setHowManyNFTs] = useState(0);
   const [loading, setLoading] = useState(false);
+  const [chainId, setChaindId] = useState("");
 
   const eth = useRef();
 
@@ -24,16 +34,13 @@ const App = () => {
     try {
       const chainId = await eth.current.request({ method: "eth_chainId" });
       console.log("Connected to chain " + chainId);
+      setChaindId(chainId);
 
-      // String, hex code of the chainId of the Rinkebey test network
-      const rinkebyChainId = "0x4";
-      // id of other networks besides Rinkeby
-      // https://docs.metamask.io/guide/ethereum-provider.html#table-of-contents
-      // https://chainlist.org/
-
-      if (chainId !== rinkebyChainId) {
-        alert(
-          "Hello there! sushiNFT is a work in progress.\n\nAt the moment, we only support the Rinkeby Test Network.\n\nHence, your wallet must be connected to the Rinkeby Test Network to mint your sushiNFTs :)"
+      if (chainId !== RINKEBY_CHAIN_ID) {
+        toast.error(
+          `Hello there! sushiNFT is a work in progress.
+           At the moment, we only support the Rinkeby Test Network.
+           Hence, your wallet must be connected to Rinkeby to mint your sushiNFTs :)`
         );
       }
     } catch (e) {
@@ -97,6 +104,8 @@ const App = () => {
         method: "eth_requestAccounts",
       });
 
+      checkIfNetworkIsRinkeby();
+
       /*
        * Print out public address once we authorize Metamask.
        */
@@ -111,6 +120,34 @@ const App = () => {
     }
   };
 
+  const successMsg = ({ closeToast }) => (
+    <div>
+      <span role="img" aria-label="sushi" className="sushi-icon">
+        🍣
+      </span>
+      <p> Mint Successful!</p>
+      <p> Here's the link to your NFT!</p>
+      <p className="small-prints">
+        {" "}
+        (Note: the NFT can take
+        <br /> ~10 minutes to appear on OpenSea)
+      </p>
+      <button
+        className="success-button connect-wallet-button"
+        onClick={closeToast}
+      >
+        <a
+          href={`https://testnets.opensea.io/assets/${CONTRACT_ADDRESS}/1`}
+          target="_blank"
+          rel="noreferrer noopener"
+          className="success-link"
+        >
+          Show NFT
+        </a>
+      </button>
+    </div>
+  );
+
   const setupEventListener = async () => {
     console.log("setting up event listener");
     try {
@@ -122,12 +159,22 @@ const App = () => {
           sushiNFT.abi,
           signer
         );
-        connectedContract.on("NewSushiNFTMinted", (from, tokenId) => {
-          console.log(from, tokenId.toNumber());
-          alert(
-            `Hey there! We've minted your NFT and sent it to your wallet. It may be blank right now. It can take a max of 10 min to show up on OpenSea. Here's the link: https://testnets.opensea.io/assets/${CONTRACT_ADDRESS}/${tokenId.toNumber()}`
-          );
-        });
+        connectedContract.on(
+          "NewSushiNFTMinted",
+          (from, tokenId, numberOfNFTs) => {
+            console.log(from, tokenId.toNumber(), numberOfNFTs.toNumber());
+            setHowManyNFTs(numberOfNFTs.toNumber());
+            toast(successMsg, {
+              position: "top-center",
+              autoClose: false,
+              hideProgressBar: false,
+              closeOnClick: false,
+              pauseOnHover: true,
+              draggable: true,
+              progress: undefined,
+            });
+          }
+        );
       }
     } catch (e) {
       console.log(e);
@@ -175,6 +222,32 @@ const App = () => {
       }
     } catch (e) {
       setLoading(false);
+      if (e.message.includes("Each address may only own one sushiNFT")) {
+        toast.error("Impossible to mint: you can only own one sushiNFT!");
+      }
+      if (e.message.includes("Only 100 sushiNFT can be minted")) {
+        toast.error(
+          "Oh no! The maximum number of sushiNFTs has already been minted!"
+        );
+      }
+      console.log(e.message);
+    }
+  };
+
+  const checkHowManyNFTs = async () => {
+    try {
+      if (eth.current) {
+        const provider = new ethers.providers.Web3Provider(eth.current);
+        const signer = provider.getSigner();
+        const connectedContract = new ethers.Contract(
+          CONTRACT_ADDRESS,
+          sushiNFT.abi,
+          signer
+        );
+        let checkHowMany = await connectedContract.howManyNFTs();
+        setHowManyNFTs(checkHowMany.toNumber());
+      }
+    } catch (e) {
       console.log(e);
     }
   };
@@ -183,13 +256,21 @@ const App = () => {
     checkIfWalletIsConnected();
   }, []);
 
+  useEffect(() => {
+    checkHowManyNFTs();
+  }, [currentAccount, loading]);
+
   // Render Methods
   const renderNotConnectedContainer = () => (
     <button
       className="cta-button connect-wallet-button"
-      onClick={connectWallet}
+      onClick={
+        chainId !== RINKEBY_CHAIN_ID ? checkIfNetworkIsRinkeby : connectWallet
+      }
     >
-      Connect to Wallet
+      {chainId !== RINKEBY_CHAIN_ID
+        ? "Connect to Rinkeby first"
+        : "Connect to Wallet"}
     </button>
   );
 
@@ -212,13 +293,26 @@ const App = () => {
   return (
     <div className="App">
       <a
-        class="github-fork-ribbon"
-        href="https://url.to-your.repo"
+        className="github-fork-ribbon"
+        href={OPENSEA_LINK}
+        target="_blank"
+        rel="noreferrer noopener"
         data-ribbon="OpenSea Collection"
         title="OpenSea Collection"
       >
         OpenSea Collection
       </a>
+      <ToastContainer
+        position="top-center"
+        autoClose={5000}
+        hideProgressBar={false}
+        newestOnTop={false}
+        closeOnClick
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+      />
       <GreatWave>
         <div className="container">
           <div className="header-container"></div>
@@ -237,8 +331,18 @@ const App = () => {
             {currentAccount
               ? renderConnectedContainer()
               : renderNotConnectedContainer()}
+            <p
+              className="nft-count"
+              data-tip="Only 365 sushiNFTs will ever be minted. Get yours now!"
+              data-place="bottom"
+            >
+              {currentAccount && `${howManyNFTs} / 365 NFTs minted so far`}
+            </p>
+            {/* https://www.npmjs.com/package/react-tooltip */}
+            <ReactTooltip />
           </div>
-          {loading && <SushiLoad />}
+          {/* {loading && <SushiLoad />} */}
+
           <div className="footer-container">
             <img alt="Github Logo" className="github-logo" src={GithubLogo} />
             <a
