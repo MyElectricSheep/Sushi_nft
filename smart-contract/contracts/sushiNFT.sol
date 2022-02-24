@@ -28,7 +28,7 @@ contract sushiNFT is ERC721URIStorage {
     // https://delishably.com/meat-dishes/The-Different-Kinds-of-Sushi
   string[] thirdWords = ["Maki_Sushi", "Gunkan_Maki", "Temaki", "Nare_Sushi", "Nigiri", "Oshi_Sushi", "Sasa_Sushi", "Kakinoha_Sushi", "Temari", "Chirashi_Sushi", "Inari_Sushi"];
 
-  event NewSushiNFTMinted(address sender, uint256 tokenId);
+  event NewSushiNFTMinted(address sender, uint256 tokenId, uint256 numberOfNFTs);
 
   // We need to pass the name of our NFTs token and its symbol.
   constructor() ERC721 ("sushiNFT", "SUSHI") {
@@ -60,8 +60,17 @@ contract sushiNFT is ERC721URIStorage {
       return uint256(keccak256(abi.encodePacked(input)));
   }
 
+  function howManyNFTs() public view returns(uint256) {
+      return _tokenIds.current();
+  }
+
   // A function our user will hit to get their NFT.
   function makeAnEpicNFT() public {
+    // require(balanceOf(msg.sender) == 0, 'Each address may only own one sushiNFT');
+    require(balanceOf(msg.sender) < 15, 'Each address may only own one sushiNFT');
+    require(_tokenIds.current() < 100, 'Only 100 sushiNFT can be minted!');
+
+
      // Get the current tokenId, this starts at 0.
     uint256 newItemId = _tokenIds.current();
 
@@ -109,6 +118,6 @@ contract sushiNFT is ERC721URIStorage {
     console.log("An NFT w/ ID %s has been minted to %s", newItemId, msg.sender);
 
     // Send an event that we can capture in the client
-    emit NewSushiNFTMinted(msg.sender, newItemId);
+    emit NewSushiNFTMinted(msg.sender, newItemId, _tokenIds.current());
   }
 }
