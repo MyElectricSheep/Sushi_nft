@@ -6,7 +6,9 @@
 
 - Minted NFTs can be seen on [Rinkeby OpenSea](https://testnets.opensea.io/account). They are goofy sushi types ERC721 tokens.
 
-![Goofy sushi NFTs](./opensea_screenshot.png)
+![sushi NFTs](./sushiNFT_screenshot.png)
+
+![Collection on OpenSea](./openSea_screenshot.png)
 
 # Stack
 
