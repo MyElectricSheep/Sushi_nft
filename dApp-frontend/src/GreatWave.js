@@ -12,7 +12,7 @@ const GreatWave = ({ children }) => {
   const parallax = (event) => {
     const layers = [bg, waveTop, waveRight, waveBottom, waveBottomRight];
     layers.forEach(({ current: layer }) => {
-      event.preventDefault();
+      //   event.preventDefault();
       let point = {};
 
       if (event.targetTouches) {

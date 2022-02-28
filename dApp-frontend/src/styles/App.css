@@ -212,6 +212,13 @@
   padding: 0 2rem;
 }
 
+.nft-count {
+  font-size: 16px;
+  color: black;
+  padding-top: 0.5rem;
+  font-style: italic;
+}
+
 .gradient-text {
   background: -webkit-linear-gradient(left, #416782 30%, #394d65 60%);
   background-clip: text;
@@ -222,6 +229,29 @@
 .sushi-icon {
   background: initial;
   -webkit-text-fill-color: initial;
+}
+
+.success-button {
+  height: 30px;
+  margin: 0 auto;
+  border: 0;
+  width: auto;
+  padding-left: 20px;
+  padding-right: 20px;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 16px;
+  font-weight: bold;
+  color: white;
+}
+
+.success-link {
+  color: white;
+  text-decoration: none;
+}
+
+.small-prints {
+  font-size: 0.8rem;
 }
 
 .cta-button {
