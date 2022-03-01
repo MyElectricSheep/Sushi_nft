@@ -40,7 +40,7 @@ contract sushiNFT is ERC721URIStorage {
     console.log("sushiNFT contract initialized");
   }
 
-  function pickRandomWord(uint256 tokenId, string memory input, string[] memory listOfWords) public view returns(string memory) {
+  function pickRandomWord(uint256 tokenId, string memory input, string[] memory listOfWords) internal pure returns(string memory) {
     uint256 rand = random(string(abi.encodePacked(input, Strings.toString(tokenId))));
     // Squash the # between 0 and the length of the array to avoid going out of bounds.
     rand = rand % listOfWords.length;
@@ -112,8 +112,7 @@ contract sushiNFT is ERC721URIStorage {
   }
 
   function makeAnEpicNFT() public {
-    // require(balanceOf(msg.sender) == 0, 'Each address may only own one sushiNFT');
-    require(balanceOf(msg.sender) < 2, 'Each address may only own one sushiNFT');
+    require(balanceOf(msg.sender) == 0, 'Each address may only own one sushiNFT');
     require(_tokenIds.current() <= 365, 'Only 365 sushiNFT can be minted!');
 
      // Get the current tokenId. Starts at 0.
@@ -135,7 +134,7 @@ contract sushiNFT is ERC721URIStorage {
     string memory verseTwo = string(abi.encodePacked("<text x='50%' y='50%' class='base' dominant-baseline='middle' text-anchor='middle'>", secondLine, "</text>"));
     string memory verseThree = string(abi.encodePacked("<text x='50%' y='60%' class='base' dominant-baseline='middle' text-anchor='middle'>", thirdLine, "</text>"));
 
-    // Concatenate it all together, and then close the <text> and <svg> tags.
+    // Concatenate it all together, and then close the <svg> tags.
     string memory finalSvg = string(abi.encodePacked(baseSvg, randColor,  patternSvg, verseOne, verseTwo, verseThree, "</svg>"));
 
     console.log(finalSvg);

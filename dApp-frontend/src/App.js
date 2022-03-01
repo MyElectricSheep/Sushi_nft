@@ -6,7 +6,8 @@ import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
 import sushiNFT from "./utils/sushiNFT.json";
-import SushiLoad from "./SushiLoad";
+// import SushiLoad from "./SushiLoad";
+import sushiLoad from "./assets/sushiLoad1.gif";
 import GreatWave from "./GreatWave";
 import ReactTooltip from "react-tooltip";
 
@@ -120,7 +121,7 @@ const App = () => {
     }
   };
 
-  const successMsg = ({ closeToast }) => (
+  const successMsg = ({ tokenId, closeToast }) => (
     <div>
       <span role="img" aria-label="sushi" className="sushi-icon">
         🍣
@@ -137,7 +138,7 @@ const App = () => {
         onClick={closeToast}
       >
         <a
-          href={`https://testnets.opensea.io/assets/${CONTRACT_ADDRESS}/1`}
+          href={`https://testnets.opensea.io/assets/${CONTRACT_ADDRESS}/${tokenId}`}
           target="_blank"
           rel="noreferrer noopener"
           className="success-link"
@@ -164,15 +165,18 @@ const App = () => {
           (from, tokenId, numberOfNFTs) => {
             console.log(from, tokenId.toNumber(), numberOfNFTs.toNumber());
             setHowManyNFTs(numberOfNFTs.toNumber());
-            toast(successMsg, {
-              position: "top-center",
-              autoClose: false,
-              hideProgressBar: false,
-              closeOnClick: false,
-              pauseOnHover: true,
-              draggable: true,
-              progress: undefined,
-            });
+            toast(
+              (args) => successMsg({ tokenId: tokenId.toNumber(), ...args }),
+              {
+                position: "top-center",
+                autoClose: false,
+                hideProgressBar: false,
+                closeOnClick: false,
+                pauseOnHover: true,
+                draggable: true,
+                progress: undefined,
+              }
+            );
           }
         );
       }
@@ -254,13 +258,12 @@ const App = () => {
 
   useEffect(() => {
     checkIfWalletIsConnected();
-  }, []);
+  }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
   useEffect(() => {
     checkHowManyNFTs();
   }, [currentAccount, loading]);
 
-  // Render Methods
   const renderNotConnectedContainer = () => (
     <button
       className="cta-button connect-wallet-button"
@@ -280,13 +283,22 @@ const App = () => {
     }`;
 
     return (
-      <button
-        onClick={askContractToMintNFT}
-        className={classes}
-        disabled={loading ? true : false}
-      >
-        {loading ? "Minting your NFT" : "Mint NFT"}
-      </button>
+      <>
+        {loading && (
+          <img
+            src={sushiLoad}
+            alt="pooping sushi"
+            className="sushi-animation"
+          />
+        )}
+        <button
+          onClick={askContractToMintNFT}
+          className={classes}
+          disabled={loading ? true : false}
+        >
+          {loading ? "Minting your NFT" : "Mint NFT"}
+        </button>
+      </>
     );
   };
 
@@ -316,7 +328,10 @@ const App = () => {
       <GreatWave>
         <div className="container">
           <div className="header-container"></div>
-          <div className="body-container">
+          <div
+            className="body-container"
+            style={loading ? { minHeight: "50vh" } : {}}
+          >
             <p className="body gradient-text">
               sushiNFT{" "}
               <span role="img" aria-label="sushi" className="sushi-icon">
@@ -324,7 +339,12 @@ const App = () => {
               </span>
             </p>
 
-            <p className="sub-text">
+            <p
+              className="sub-text"
+              data-tip="Each sushiNFT will generate a unique japanese haiku, <br/> an unrhymed three-line poem. <br /> sushiNFTs are hosted 100% on chain <br/> which makes them permanent and secure."
+              data-multiline
+              data-place="right"
+            >
               Each unique. <br /> Each delicious. <br /> Discover your own
               sushiNFT today.
             </p>
