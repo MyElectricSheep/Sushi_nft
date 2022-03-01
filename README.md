@@ -2,7 +2,7 @@
 
 - This is a fun project to learn about the Solidity programming language, smart contracts and NFTs! 
 
-- The dApp's front-end is published [here](https://sushinft.netlify.app/)
+- The sushiNFT dApp's front-end [is published here](https://sushinft.netlify.app/)
 
 - The contract address on [rinkeby etherscan](https://rinkeby.etherscan.io/address/0x0713dbA8E86881DE2465ab469570dD8C6995b983) is 0x0713dbA8E86881DE2465ab469570dD8C6995b983
 
