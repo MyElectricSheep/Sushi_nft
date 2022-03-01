@@ -31,7 +31,7 @@ Any time the contract is changed:
 - Redeploy
 - Update environment variables on Netlify
 
-# Compile smart contract and deploy to local Hardhat chain
+# Compile smart contract and deploy it
 
 **Run the following commands from withing the `smart-contract` directory.**
 
