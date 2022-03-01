@@ -6,7 +6,9 @@
 
 - The contract address on [rinkeby etherscan](https://rinkeby.etherscan.io/address/0x0713dbA8E86881DE2465ab469570dD8C6995b983) is 0x0713dbA8E86881DE2465ab469570dD8C6995b983
 
-- Minted NFTs can be seen on [Rinkeby OpenSea](https://testnets.opensea.io/collection/sushinft-25hek49stz). They are ERC721 types tokens
+- Minted NFTs can be seen on the [OpenSea Rinkeby Testnet](https://testnets.opensea.io/collection/sushinft-25hek49stz). They are ERC721 types tokens
+
+- Each sushiNFT will generate a unique japanese haiku, an unrhymed three-line poem. sushiNFTs are hosted 100% on chain, as base64 encoded programmatically generated SVGs which makes them permanent and secure
 
 ![sushi NFTs](./sushiNFT_screenshot.png)
 
