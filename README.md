@@ -2,11 +2,13 @@
 
 - This is a fun project to learn about the Solidity programming language, smart contracts and NFTs! 
 
-- The sushiNFT dApp's front-end [is published here](https://sushinft.netlify.app/)
+- The sushiNFT dApp's front-end [is published here](https://sushi.ben.express/)
 
 - The contract address on [rinkeby etherscan](https://rinkeby.etherscan.io/address/0x0713dbA8E86881DE2465ab469570dD8C6995b983) is 0x0713dbA8E86881DE2465ab469570dD8C6995b983
 
 - Minted NFTs can be seen on the [OpenSea Rinkeby Testnet](https://testnets.opensea.io/collection/sushinft-25hek49stz). They are ERC721 types tokens
+
+- The [MetaMask Browser Extension](https://chrome.google.com/webstore/detail/metamask/nkbihfbeogaeaoehlefnkodbefgpgknn?hl=en) and an Account on the [Rinkeby test network](https://www.rinkeby.io/) are necessary to use this app!
 
 - Each sushiNFT will generate a unique japanese haiku, an unrhymed three-line poem. sushiNFTs are hosted 100% on chain, as base64 encoded programmatically generated SVGs which makes them permanent and secure
 
