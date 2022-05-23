@@ -1,12 +1,12 @@
 # Contract and NFT details
 
-- This is a fun project to learn about the Solidity programming language, smart contracts and NFTs! 
+- This is a fun project to learn about the `Solidity` programming language, smart contracts and NFTs! 
 
 - The sushiNFT dApp's front-end [is published here](https://sushi.ben.express/)
 
-- The contract address on [rinkeby etherscan](https://rinkeby.etherscan.io/address/0x0713dbA8E86881DE2465ab469570dD8C6995b983) is 0x0713dbA8E86881DE2465ab469570dD8C6995b983
+- The contract address on [rinkeby etherscan](https://rinkeby.etherscan.io/address/0x0713dbA8E86881DE2465ab469570dD8C6995b983) is **0x0713dbA8E86881DE2465ab469570dD8C6995b983**
 
-- Minted NFTs can be seen on the [OpenSea Rinkeby Testnet](https://testnets.opensea.io/collection/sushinft-25hek49stz). They are ERC721 types tokens
+- Minted NFTs can be seen on the [OpenSea Rinkeby Testnet](https://testnets.opensea.io/collection/sushinft-25hek49stz). They are `ERC721` types tokens
 
 - The [MetaMask Browser Extension](https://chrome.google.com/webstore/detail/metamask/nkbihfbeogaeaoehlefnkodbefgpgknn?hl=en) and an Account on the [Rinkeby test network](https://www.rinkeby.io/) are necessary to use this app!
 
@@ -18,7 +18,11 @@
 
 # Stack
 
-Hardhat, Solidity, JavaScript, React, [Alchemy](https://www.alchemy.com/) entrypoint to Ethereum node APIs.
+- [Hardhat](hardhat.org/)
+- [Solidity](https://docs.soliditylang.org/)
+- [Alchemy](https://www.alchemy.com/) entrypoint to Ethereum node APIs.
+- JavaScript
+- React
 
 Smart contract deployed on the Rinkeby Test Network.
 
